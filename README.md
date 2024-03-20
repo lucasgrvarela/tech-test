@@ -15,6 +15,7 @@ With `Just` installed on your system, all the tools you will need to have instal
 
 # Kubernetes (Kind)
 I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: _kind_  
+
 Cgroups was on v1 instead of v2 on my host as I'm using rootless docker setup I had to configure my host following the doc: https://kind.sigs.k8s.io/docs/user/rootless/#host-requirements
 
 # Ingress and Traffic Split: Istio
