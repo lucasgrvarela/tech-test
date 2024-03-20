@@ -11,7 +11,7 @@ $ echo -e "\nsource ~/.asdf/asdf.sh" >> ~/.bashrc
 $ asdf plugin add just && asdf install just latest && asdf global just latest
 ```
 
-With `Just` installed on your system, all the tools you will need to have installed on your local machine are already provided on the `justfile` with the `deps` command
+With `Just` installed on your system, all the tools you will need to have installed on your local machine are already provided in the `justfile` with the `deps` command
 
 # Kubernetes (Kind)
 I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: _kind_  
