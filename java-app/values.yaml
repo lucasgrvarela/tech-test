@@ -1,0 +1,32 @@
+deployment: true
+service: true
+gateway: true
+virtualService: true
+destinationRule: true
+
+name: java-webserver
+namespace: java-webserver
+
+targetPort: 8080
+exposedPort: 80
+image: localhost:5001/java-webserver:v0.0.1
+replicas: 3
+hosts: 
+  - java-webserver.example.com
+
+readinessProbe:
+  path: "/ready"
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+customHeader:
+  x-trv-heritage: java-webserver
+
+uris:
+  - /hotels
+  - /health
+  - /ready
+  - /metrics
+
+namespaceLabels:
+  istio-injection: enabled

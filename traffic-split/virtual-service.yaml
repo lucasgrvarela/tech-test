@@ -1,0 +1,39 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: trivago-webserver-virtual-service
+  namespace: trivago-webserver
+spec:
+  gateways:
+  - trivago-gateway
+  hosts:
+  - trivago.example.com
+  http:
+  - match:
+    - uri:
+        prefix: /hotels
+    - uri:
+        prefix: /health
+    - uri:
+        prefix: /ready
+    - uri:
+        prefix: /metrics
+    route:
+    - destination:
+        host: go-webserver-service.go-webserver.svc.cluster.local
+        port:
+          number: 80
+      weight: 70
+      headers:
+        response:
+          add:
+            x-trv-heritage: go-webserver
+    - destination:
+        host: java-webserver-service.java-webserver.svc.cluster.local
+        port:
+          number: 80
+      weight: 30
+      headers:
+        response:
+          add:
+            x-trv-heritage: java-webserver
