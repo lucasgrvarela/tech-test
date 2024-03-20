@@ -1,0 +1,7 @@
+FROM openjdk:11-jre-slim
+
+WORKDIR /app
+
+COPY java-webserver.jar .
+
+CMD ["java", "-jar", "java-webserver.jar"]
