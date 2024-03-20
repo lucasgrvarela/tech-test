@@ -1,14 +1,14 @@
 # Prerequisites
 ```
 # git
-sudo apt install git -y
+$ sudo apt install git -y
 
 # asdf
-[ -d ~/.asdf ] && echo "asdf exists" || git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.0
-echo -e "\nsource ~/.asdf/asdf.sh" >> ~/.bashrc
+$ [ -d ~/.asdf ] && echo "asdf exists" || git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.0
+$ echo -e "\nsource ~/.asdf/asdf.sh" >> ~/.bashrc
 
 # just
-asdf plugin add just && asdf install just latest && asdf global just latest
+$ asdf plugin add just && asdf install just latest && asdf global just latest
 ```
 
 With `Just` installed on your system, all the tools you will need to have installed on your local machine are already provided on the `justfile` with the `deps` command
