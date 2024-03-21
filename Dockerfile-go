@@ -2,6 +2,8 @@ FROM golang:1.16
 
 WORKDIR /app
 
+COPY /golang-webserver/ .
+
 RUN GOOS=linux GOARCH=amd64 go build -o golang-webserver_amd64
 
 CMD ["./golang-webserver_amd64"]
