@@ -1,9 +1,17 @@
-FROM golang:1.16
+FROM golang:1.16 AS builder
 
 WORKDIR /app
 
-COPY /golang-webserver/ .
+COPY golang-webserver/ .
 
-RUN GOOS=linux GOARCH=amd64 go build -o golang-webserver_amd64
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o golang-webserver
 
-CMD ["./golang-webserver_amd64"]
+FROM alpine:3.19
+
+WORKDIR /app
+
+COPY --from=builder /app/golang-webserver .
+
+EXPOSE 8080
+
+CMD ["./golang-webserver"]

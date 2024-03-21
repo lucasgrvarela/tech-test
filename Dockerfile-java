@@ -1,7 +1,9 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:23
 
 WORKDIR /app
 
 COPY java-webserver.jar .
+
+EXPOSE 8080
 
 CMD ["java", "-jar", "java-webserver.jar"]
