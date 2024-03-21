@@ -19,6 +19,10 @@ deps:
 	# jq
 	asdf plugin add jq && asdf install jq latest && asdf global jq latest
 
+	# istio
+	asdf plugin add istio https://github.com/solo-io/asdf-istio && asdf install istio latest && asdf global istio latest
+	echo -e '\nPATH="$PATH:~/.asdf/installs/istio/$(ls ~/.asdf/installs/istio/)/bin"' >> ~/.bashrc
+
 setup-kind:
 	# to do
 
