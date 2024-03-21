@@ -1,4 +1,3 @@
-# configure deps
 deps:
 	echo "installing dependencies"
 
@@ -47,7 +46,21 @@ set-context:
 setup-istio:
 	helm repo add istio https://istio-release.storage.googleapis.com/charts
 	helm repo update
+
+	# base chart which contains cluster-wide CRDs which must be installed prior to the deployment of the control plane
 	helm install istio-base istio/base -n istio-system --set defaultRevision=default
+
+	# discovery chart which deploys the istiod service
+	helm install istiod istio/istiod -n istio-system --wait
+
+	# https://istio.io/latest/docs/setup/platform-setup/kind/#setup-metallb-for-kind
+	# https://kind.sigs.k8s.io/docs/user/loadbalancer/
+	
+
+
+	# ingress gateway
+	kubectl create namespace istio-ingress
+	helm install istio-ingress istio/gateway -n istio-ingress --wait
 
 setup-prometheus:
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts

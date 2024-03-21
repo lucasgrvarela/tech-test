@@ -18,3 +18,4 @@ To install Prometheus with Helm run: `just setup-prometheus`
 Run `just setup-all`
 
 ### PENDING: create kind local registry, push to local registry, spin up istio with helm, spin up prometheus+grafana with helm
+https://kind.sigs.k8s.io/docs/user/local-registry/
