@@ -20,7 +20,7 @@ deps:
 
 	# istio
 	asdf plugin add istio https://github.com/solo-io/asdf-istio && asdf install istio latest && asdf global istio latest
-	echo -e '\nPATH="$PATH:~/.asdf/installs/istio/$(ls ~/.asdf/installs/istio/)/bin"' >> ~/.bashrc
+	printf '\nPATH="$PATH:~/.asdf/installs/istio/$(ls ~/.asdf/installs/istio/)/bin"' >> ~/.bashrc
 
 go-build:
 	docker build -t go-webserver:v0.0.1 -f Dockerfile-go .
