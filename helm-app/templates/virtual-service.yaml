@@ -22,4 +22,10 @@ spec:
         port:
           number: {{ .Values.targetPort }}
         host: {{ .Values.name }}
+      headers:
+        response:
+          add:
+            {{- range $key, $value := .Values.customHeader }}
+            {{ $key }}: {{ $value }}
+            {{- end }}
 {{ end }}

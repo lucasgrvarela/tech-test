@@ -1,23 +1,30 @@
+## 
+## SAMPLE VALUES.YAML FILE
+## 
+
 deployment: true
 service: true
 gateway: true
 virtualService: true
 destinationRule: true
 
-name: webserver
-namespace: app
+name: go-webserver
+namespace: go-webserver
 
-targetPort: 9999
+targetPort: 8080
 exposedPort: 80
-image: localhost:5001/app-webserver:v1.0.0
+image: localhost:5001/go-webserver:v0.0.1
 replicas: 3
 hosts: 
-  - webserver.example.com
+  - go-webserver.example.com
 
 readinessProbe:
   path: "/ready"
   initialDelaySeconds: 5
   periodSeconds: 10
+
+custom-header-value: 
+  x-trv-heritage: go-webserver
 
 uris:
   - /hotels

@@ -19,6 +19,9 @@ readinessProbe:
   initialDelaySeconds: 5
   periodSeconds: 10
 
+customHeader: 
+  x-trv-heritage: go-webserver
+
 uris:
   - /hotels
   - /health

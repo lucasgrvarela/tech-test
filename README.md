@@ -46,5 +46,4 @@ For a production system I believe all the commands could be improved to be more 
 
 # PENDING:
 - Traffic split 30 java, 70 go
-- Header x-trv-heritage on response
 - Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)
