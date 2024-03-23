@@ -6,19 +6,16 @@ I usually install every dev tool with `asdf`, it makes my environment pretty eas
 # Kubernetes with Kind tool
 I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: [kind](https://github.com/kubernetes-sigs/kind) "Kubernetes IN Docker: local clusters for testing Kubernetes", created and maintaned by kubernetes-sigs
 
-Cgroups was on v1 instead of v2 on my host as I'm using rootless docker setup I had to configure my host following the doc: https://kind.sigs.k8s.io/docs/user/rootless/#host-requirements
+Cgroups was on v1 instead of v2 on my host as I'm using rootless docker setup I had to configure my host following the doc: [rootless host requirements](https://kind.sigs.k8s.io/docs/user/rootless/#host-requirements)
 
 # Ingress and Traffic Split: Istio
 I could have installed istio with `istioctl install --set profile=demo -y` but to keep the standard of deploying everything with Helm run: `just setup-istio`
-
-# Prometheus
-To install Prometheus with Helm run: `just setup-prometheus`
 
 # To setup all the tools at once
 Run `just setup-all`
 
 ### PENDING: 
-- create kind local registry: https://kind.sigs.k8s.io/docs/user/local-registry/
-- push images to local registry: justfile
-- spin up istio Ingress Gateway with helm: https://istio.io/latest/docs/setup/platform-setup/kind/#setup-metallb-for-kind
+- fix DestinationRule and VirtualService for Java and Go
+- create helm for DestinationRule and Virtual Service
+- fix bug on metallb not reaching the service when doing some curl # port 5678 is not mapped on my local computer
 - spin up prometheus+grafana with helm

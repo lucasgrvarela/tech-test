@@ -1,3 +1,6 @@
+default:
+  just --list
+
 deps:
 	echo "installing dependencies"
 
@@ -22,28 +25,33 @@ deps:
 	asdf plugin add istio https://github.com/solo-io/asdf-istio && asdf install istio latest && asdf global istio latest
 	printf '\nPATH="$PATH:~/.asdf/installs/istio/$(ls ~/.asdf/installs/istio/)/bin"' >> ~/.bashrc
 
-go-build:
-	docker build -t go-webserver:v0.0.1 -f Dockerfile-go .
-
-go-push:
-	# push to local kind registry
-
-java-build:
-	docker build -t java-webserver:v0.0.1 -f Dockerfile-java .
-
-java-push:
-	# push to local kind registry
-
 setup-kind:
-	kind create cluster
-
-get-cluster:
-	kind get clusters
+	# https://kind.sigs.k8s.io/docs/user/local-registry/
+	bash kind-with-registry.sh 
 
 set-context:
 	kubectl config use-context kind-kind
 
+setup-metallb:
+	# https://kind.sigs.k8s.io/docs/user/loadbalancer/
+	# https://metallb.universe.tf/installation/ -> Followed this doc to install with Helm
+
+	kubectl create namespace metallb-system
+	
+	helm repo add metallb https://metallb.github.io/metallb
+	helm repo update
+	helm install metallb metallb/metallb -n metallb-system --wait
+
+	kubectl apply -f metallb-config.yaml # change available address based on -> $ docker network inspect -f '{{.IPAM.Config}}' kind
+
+	# Test metallb
+	# kubectl apply -f https://kind.sigs.k8s.io/examples/loadbalancer/usage.yaml
+	# curl $LB_IP:5678 -vI
+	# curl: (7) Failed to connect to 172.18.0.1 port 5678: Conexão recusada  -> to check
+
 setup-istio:
+	kubectl create namespace istio-system
+
 	helm repo add istio https://istio-release.storage.googleapis.com/charts
 	helm repo update
 
@@ -53,12 +61,7 @@ setup-istio:
 	# discovery chart which deploys the istiod service
 	helm install istiod istio/istiod -n istio-system --wait
 
-	# https://istio.io/latest/docs/setup/platform-setup/kind/#setup-metallb-for-kind
-	# https://kind.sigs.k8s.io/docs/user/loadbalancer/
-	
-
-
-	# ingress gateway
+setup-ingress-gateway:
 	kubectl create namespace istio-ingress
 	helm install istio-ingress istio/gateway -n istio-ingress --wait
 
@@ -67,11 +70,27 @@ setup-prometheus:
 	helm repo update
 	helm install prometheus-community/prometheus --generate-name
 
-setup-all:
-	#deps
-	#setup-kind
-	#setup-istio
-	#setup-prometheus
+#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus
+setup-all: setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus
+
+go-build:
+	docker build -t go-webserver:v0.0.1 -f Dockerfile-go .
+
+go-push:
+	docker tag go-webserver:v0.0.1 localhost:5001/go-webserver:v0.0.1
+	docker push localhost:5001/go-webserver:v0.0.1
+
+java-build:
+	docker build -t java-webserver:v0.0.1 -f Dockerfile-java .
+
+java-push:
+	docker tag java-webserver:v0.0.1 localhost:5001/java-webserver:v0.0.1
+	docker push localhost:5001/java-webserver:v0.0.1
+
+build-and-push-all: go-build java-build go-push java-push
+
+setup-istio-resources:
+	kubectl apply -f istio-resources.yaml
 
 generate-load:
 	jq -ncM '{method: "GET", url: "http://localhost:8080" }' | vegeta attack -format=json -rate=10 -duration=10s
