@@ -67,8 +67,11 @@ setup-grafana:
 	helm repo update
 	helm install grafana grafana/grafana --namespace monitoring
 
-#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-kiali setup-ingress-gateway setup-prometheus setup-grafana
-setup-all: setup-kind set-context setup-metallb setup-istio setup-kiali setup-ingress-gateway setup-prometheus setup-grafana
+setup-traffic-split:
+	#kubectl label namespace default istio-injection=enabled
+
+#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-traffic-split setup-kiali setup-prometheus setup-grafana
+setup-all: setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-traffic-split setup-kiali setup-prometheus setup-grafana
 
 go-build:
 	docker build -t go-webserver:v0.0.1 ./go-app/
