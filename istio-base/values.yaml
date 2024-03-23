@@ -1,0 +1,18 @@
+defaultRevision: default
+defaults:
+  base:
+    enableCRDTemplates: false
+    enableIstioConfigCRDs: true
+    validationURL: ""
+  defaultRevision: default
+  global:
+    configValidation: true
+    externalIstiod: false
+    imagePullSecrets: []
+    ipFamilies: []
+    ipFamilyPolicy: ""
+    istioNamespace: istio-system
+    istiod:
+      enableAnalysis: false
+    platform: ""
+    remotePilotAddress: ""

@@ -42,7 +42,7 @@ setup-metallb:
 	helm repo update
 	helm install metallb metallb/metallb -n metallb-system --wait
 
-	kubectl apply -f metallb-config.yaml # change available address based on -> $ docker network inspect -f '{{.IPAM.Config}}' kind
+	kubectl apply -f metallb-config.yaml # change available address based on -> $ docker network inspect kind
 
 	# Test metallb
 	# kubectl apply -f https://kind.sigs.k8s.io/examples/loadbalancer/usage.yaml
@@ -66,9 +66,10 @@ setup-ingress-gateway:
 	helm install istio-ingress istio/gateway -n istio-ingress --wait
 
 setup-prometheus:
+	kubectl create namespace monitoring
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo update
-	helm install prometheus-community/prometheus --generate-name
+	helm install prometheus prometheus-community/prometheus -n monitoring
 
 #setup-all: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus
 setup-all: setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus

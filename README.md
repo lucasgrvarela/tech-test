@@ -15,7 +15,7 @@ I could have installed istio with `istioctl install --set profile=demo -y` but t
 Run `just setup-all`
 
 ### PENDING: 
+- fix bug on metallb not reaching the service when doing some curl
 - fix DestinationRule and VirtualService for Java and Go
 - create helm for DestinationRule and Virtual Service
-- fix bug on metallb not reaching the service when doing some curl # port 5678 is not mapped on my local computer
 - spin up prometheus+grafana with helm
