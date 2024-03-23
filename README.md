@@ -11,8 +11,3 @@ I could have installed istio with `istioctl` binary but to keep the standard of 
 
 # To setup all the k8s stack at once with monitoring
 Run `just setup-all`
-
-### PENDING: 
-- fix DestinationRule and VirtualService for Java and Go
-- create helm for DestinationRule and Virtual Service
-- spin up prometheus+grafana with helm

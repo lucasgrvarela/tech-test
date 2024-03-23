@@ -71,26 +71,26 @@ setup-grafana:
 setup-all: setup-kind set-context setup-metallb setup-istio setup-kiali setup-ingress-gateway setup-prometheus setup-grafana
 
 go-build:
-	docker build -t go-webserver:v0.0.1 -f Dockerfile-go .
+	docker build -t go-webserver:v0.0.1 ./go-app/
 
 go-push:
 	docker tag go-webserver:v0.0.1 localhost:5001/go-webserver:v0.0.1
 	docker push localhost:5001/go-webserver:v0.0.1
 
 java-build:
-	docker build -t java-webserver:v0.0.1 -f Dockerfile-java .
+	docker build -t java-webserver:v0.0.1 ./java-app/
 
 java-push:
 	docker tag java-webserver:v0.0.1 localhost:5001/java-webserver:v0.0.1
 	docker push localhost:5001/java-webserver:v0.0.1
 
 helm-install-go:
-	#
+	kubectl apply -f go-app/templates/
 
 helm-install-java:
-	#
+	kubectl apply -f java-app/templates/
 
-build-push-install: go-build java-build go-push java-push  helm-install-go helm-install-java
+build-push-install: go-build java-build go-push java-push helm-install-go helm-install-java
 
 generate-load:
 	jq -ncM '{method: "GET", url: "http://localhost:8080" }' | vegeta attack -format=json -rate=10 -duration=10s
