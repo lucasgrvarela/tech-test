@@ -27,7 +27,7 @@ deps:
 
 setup-kind:
 	# https://kind.sigs.k8s.io/docs/user/local-registry/
-	bash kind-with-registry.sh 
+	bash kind/kind-with-registry.sh 
 
 set-context:
 	kubectl config use-context kind-kind
@@ -42,12 +42,11 @@ setup-metallb:
 	helm repo update
 	helm install metallb metallb/metallb -n metallb-system --wait
 
-	kubectl apply -f metallb-config.yaml # change available address based on -> $ docker network inspect kind
+	kubectl apply -f metallb/metallb-config.yaml # change available address based on -> $ docker network inspect kind
 
 	# Test metallb
 	# kubectl apply -f https://kind.sigs.k8s.io/examples/loadbalancer/usage.yaml
 	# curl $LB_IP:5678 -vI
-	# curl: (7) Failed to connect to 172.18.0.1 port 5678: Conexão recusada  -> to check
 
 setup-istio:
 	kubectl create namespace istio-system
@@ -61,6 +60,9 @@ setup-istio:
 	# discovery chart which deploys the istiod service
 	helm install istiod istio/istiod -n istio-system --wait
 
+setup-kiali:
+	# https://kiali.io/docs/installation/installation-guide/install-with-helm/
+
 setup-ingress-gateway:
 	kubectl create namespace istio-ingress
 	helm install istio-ingress istio/gateway -n istio-ingress --wait
@@ -71,8 +73,11 @@ setup-prometheus:
 	helm repo update
 	helm install prometheus prometheus-community/prometheus -n monitoring
 
-#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus
-setup-all: setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus
+setup-grafana:
+	# to do
+
+#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus setup-grafana
+setup-all: setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus setup-grafana
 
 go-build:
 	docker build -t go-webserver:v0.0.1 -f Dockerfile-go .
@@ -88,10 +93,13 @@ java-push:
 	docker tag java-webserver:v0.0.1 localhost:5001/java-webserver:v0.0.1
 	docker push localhost:5001/java-webserver:v0.0.1
 
-build-and-push-all: go-build java-build go-push java-push
+helm-install-go:
+	#
 
-setup-istio-resources:
-	kubectl apply -f istio-resources.yaml
+helm-install-java:
+	#
+
+build-push-install: go-build java-build go-push java-push  helm-install-go helm-install-java
 
 generate-load:
 	jq -ncM '{method: "GET", url: "http://localhost:8080" }' | vegeta attack -format=json -rate=10 -duration=10s
