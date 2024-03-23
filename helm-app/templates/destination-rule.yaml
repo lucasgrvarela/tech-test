@@ -1,0 +1,12 @@
+{{ if eq .Values.destinationRule true }}
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ .Values.name }}-destination-rule
+  namespace: {{ .Values.namespace }}
+spec:
+  host: {{ .Values.name }}
+  trafficPolicy:
+    loadBalancer:
+      simple: LEAST_REQUEST
+{{ end }}

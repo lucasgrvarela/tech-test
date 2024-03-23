@@ -60,10 +60,6 @@ setup-ingress-gateway:
 	kubectl create namespace istio-ingress
 	helm install istio-ingress istio/gateway -n istio-ingress --wait
 
-# Configure the traffic split for the applications
-setup-traffic-split:
-	#kubectl label namespace default istio-injection=enabled
-
 #####            #####
 #####            #####
 ##### MONITORING #####
@@ -117,11 +113,11 @@ java-push:
 
 # Install the Go app using Helm
 helm-install-go:
-	kubectl apply -f go-app/templates/
+	helm upgrade --install  go-webserver -f go-app/values.yaml helm-app/
 
 # Install the Java app using Helm
 helm-install-java:
-	kubectl apply -f java-app/templates/
+	helm upgrade --install java-webserver -f java-app/values.yaml helm-app/
 
 # Load test the applications
 generate-load:
@@ -134,7 +130,7 @@ generate-load:
 #####      #####
 
 # Spinup all the infrastructure from local k8s to monitoring
-setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-traffic-split setup-kiali setup-prometheus setup-grafana
+setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-kiali setup-prometheus setup-grafana
 
 # Spinup all the applications configurations from build, push to helm install
 setup-all-apps: go-build java-build go-push java-push helm-install-go helm-install-java

@@ -1,0 +1,25 @@
+{{ if eq .Values.virtualService true }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Values.name }}-virtual-service
+  namespace: {{ .Values.namespace }}
+spec:
+  hosts:
+  {{- range .Values.hosts }}
+  - {{ . }}
+  {{- end }}
+  gateways:
+  - {{ .Values.name }}-gateway
+  http:
+  - match:
+    {{- range .Values.uris }}
+    - uri:
+        prefix: {{ . }}
+    {{- end }}
+    route:
+    - destination:
+        port:
+          number: {{ .Values.targetPort }}
+        host: {{ .Values.name }}
+{{ end }}
