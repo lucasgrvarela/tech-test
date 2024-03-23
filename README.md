@@ -43,3 +43,8 @@ I had trouble with K3d and could not get it working quickly, I was starting to s
 I could have installed istio with `istioctl` binary but to keep the standard of deploying everything with Helm I configured: `just setup-istio`.
 
 For a production system I believe all the commands could be improved to be more idempotent so I could check if some tool was already installed or not before trying to install, I could install a specific version instead of just relying on latests, check for errors and perform retry if the installation failed for some reason at some point, all that would be nice for a more mature setup.
+
+# PENDING:
+- Traffic split 30 java, 70 go
+- Header x-trv-heritage on response
+- Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)

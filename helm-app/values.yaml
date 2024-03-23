@@ -10,7 +10,7 @@ namespace: app
 targetPort: 9999
 exposedPort: 80
 image: localhost:5001/app-webserver:v1.0.0
-replicas: 15
+replicas: 3
 hosts: 
   - webserver.example.com
 
