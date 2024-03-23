@@ -9,9 +9,6 @@ deps:
 	go install sigs.k8s.io/kind@v0.22.0
 	go install github.com/tsenart/vegeta@latest
 
-	# docker
-	sudo apt install uidmap -y && curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh && rm get-docker.sh && dockerd-rootless-setuptool.sh install --force
-
 	# kubectl
 	asdf plugin add kubectl && ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.29.2 && asdf global kubectl 1.29.2
 
@@ -20,10 +17,6 @@ deps:
 
 	# jq
 	asdf plugin add jq && asdf install jq latest && asdf global jq latest
-
-	# istio
-	asdf plugin add istio https://github.com/solo-io/asdf-istio && asdf install istio latest && asdf global istio latest
-	printf '\nPATH="$PATH:~/.asdf/installs/istio/$(ls ~/.asdf/installs/istio/)/bin"' >> ~/.bashrc
 
 setup-kind:
 	# https://kind.sigs.k8s.io/docs/user/local-registry/
@@ -35,18 +28,11 @@ set-context:
 setup-metallb:
 	# https://kind.sigs.k8s.io/docs/user/loadbalancer/
 	# https://metallb.universe.tf/installation/ -> Followed this doc to install with Helm
-
 	kubectl create namespace metallb-system
-	
 	helm repo add metallb https://metallb.github.io/metallb
 	helm repo update
 	helm install metallb metallb/metallb -n metallb-system --wait
-
-	kubectl apply -f metallb/metallb-config.yaml # change available address based on -> $ docker network inspect kind
-
-	# Test metallb
-	# kubectl apply -f https://kind.sigs.k8s.io/examples/loadbalancer/usage.yaml
-	# curl $LB_IP:5678 -vI
+	kubectl apply -f metallb/metallb-config.yaml # change address based on the command $ docker network inspect kind | jq .[0].IPAM.Config
 
 setup-istio:
 	kubectl create namespace istio-system
@@ -62,6 +48,9 @@ setup-istio:
 
 setup-kiali:
 	# https://kiali.io/docs/installation/installation-guide/install-with-helm/
+	helm repo add kiali https://kiali.org/helm-charts
+	helm repo update
+	helm install --set cr.create=true --set cr.namespace=istio-system --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator
 
 setup-ingress-gateway:
 	kubectl create namespace istio-ingress
@@ -74,10 +63,12 @@ setup-prometheus:
 	helm install prometheus prometheus-community/prometheus -n monitoring
 
 setup-grafana:
-	# to do
+	helm repo add grafana https://grafana.github.io/helm-charts
+	helm repo update
+	helm install grafana grafana/grafana --namespace monitoring
 
-#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus setup-grafana
-setup-all: setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-prometheus setup-grafana
+#setup-all: deps setup-kind set-context setup-metallb setup-istio setup-kiali setup-ingress-gateway setup-prometheus setup-grafana
+setup-all: setup-kind set-context setup-metallb setup-istio setup-kiali setup-ingress-gateway setup-prometheus setup-grafana
 
 go-build:
 	docker build -t go-webserver:v0.0.1 -f Dockerfile-go .

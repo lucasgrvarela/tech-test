@@ -4,18 +4,15 @@ To install the dependencies to install just, run `make`. Now with `Just` install
 I usually install every dev tool with `asdf`, it makes my environment pretty easy to replicate and I don't need to think too much on how to install a new tool, if an asdf plugin is not available for the tool I'm installing then I will follow the tool documentation on how to install it
 
 # Kubernetes with Kind tool
-I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: [kind](https://github.com/kubernetes-sigs/kind) "Kubernetes IN Docker: local clusters for testing Kubernetes", created and maintaned by kubernetes-sigs
-
-Cgroups was on v1 instead of v2 on my host as I'm using rootless docker setup I had to configure my host following the doc: [rootless host requirements](https://kind.sigs.k8s.io/docs/user/rootless/#host-requirements)
+I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: [kind](https://github.com/kubernetes-sigs/kind)
 
 # Ingress and Traffic Split: Istio
-I could have installed istio with `istioctl install --set profile=demo -y` but to keep the standard of deploying everything with Helm run: `just setup-istio`
+I could have installed istio with `istioctl` binary but to keep the standard of deploying everything with Helm I configured: `just setup-istio`
 
-# To setup all the tools at once
+# To setup all the k8s stack at once with monitoring
 Run `just setup-all`
 
 ### PENDING: 
-- fix bug on metallb not reaching the service when doing some curl
 - fix DestinationRule and VirtualService for Java and Go
 - create helm for DestinationRule and Virtual Service
 - spin up prometheus+grafana with helm
