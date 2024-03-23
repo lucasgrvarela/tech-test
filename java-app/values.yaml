@@ -19,8 +19,8 @@ readinessProbe:
   initialDelaySeconds: 5
   periodSeconds: 10
 
-custom-header: 
-  x-trv-heritage: go-webserver
+customHeader:
+  x-trv-heritage: java-webserver
 
 uris:
   - /hotels

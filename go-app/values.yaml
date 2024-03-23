@@ -19,7 +19,7 @@ readinessProbe:
   initialDelaySeconds: 5
   periodSeconds: 10
 
-customHeader: 
+customHeader:
   x-trv-heritage: go-webserver
 
 uris:
