@@ -23,7 +23,7 @@ Available recipes:
     helm-install-java           # Install the Java app using Helm
     java-build                  # Build the Java app
     java-push                   # Docker tag and push the Java app to the local registry
-    open-dashboards             # Open all dashs like kiali, jaeger, prometheus and grafana
+    open-dashboards             # Open all dashs like kiali (token will be printed on terminal), jaeger, prometheus and grafana
     set-context                 # Set the current kubernetes context to the kind cluster
     setup-all-apps              # Spinup all the applications configurations from build, push to helm install
     setup-all-infra             # Spinup all the infrastructure from local k8s to monitoring

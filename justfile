@@ -65,9 +65,10 @@ setup-kiali:
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/grafana.yaml
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml
 
-# Open all dashs like kiali, jaeger, prometheus and grafana
+# Open all dashs like kiali (token will be printed on terminal), jaeger, prometheus and grafana
 open-dashboards:
-	istioctl dashboard kiali & # kubectl -n istio-system create token kiali-service-account
+	kubectl -n istio-system create token kiali-service-account
+	istioctl dashboard kiali &
 	istioctl dashboard jaeger &
 	istioctl dashboard prometheus &
 	istioctl dashboard grafana &
