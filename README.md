@@ -2,7 +2,7 @@
 To install the dependencies to install just, run `make`.  
 Now with `Just` installed on your system, all the tools you will need to have installed on your local machine are provided in the `justfile` with the `deps` command
 
-# To setup all the k8s stack at once with monitoring
+# To setup all the local tools, kubernetes stack and once with monitoring
 Run `just setup-all-infra`
 
 # To setup the apps with all the configurations

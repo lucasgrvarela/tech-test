@@ -10,8 +10,8 @@ default:
 
 # Install all the tools you will need to setup the project
 deps:
-	asdf plugin add kind https://github.com/reegnz/asdf-kind.git && asdf install kind latest && asdf global kind latest
 	asdf plugin add vegeta https://github.com/grimoh/asdf-vegeta.git && asdf install vegeta latest && asdf global vegeta latest
+	asdf plugin add kind https://github.com/reegnz/asdf-kind.git && asdf install kind latest && asdf global kind latest
 	asdf plugin add kubectl && ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.29.2 && asdf global kubectl 1.29.2
 	asdf plugin add helm && asdf install helm latest && asdf global helm latest
 	asdf plugin add jq && asdf install jq latest && asdf global jq latest
