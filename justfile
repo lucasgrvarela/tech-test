@@ -55,8 +55,7 @@ setup-istio:
 
 # Install the istio ingress gateway
 setup-ingress-gateway:
-	kubectl create namespace istio-ingress
-	helm install istio-ingress istio/gateway -n istio-ingress --wait
+	helm upgrade -i istio-ingressgateway istio/gateway -n istio-ingress --create-namespace --wait -f istio-ingress-gateway/values.yaml
 
 #####            #####
 #####            #####
@@ -64,38 +63,16 @@ setup-ingress-gateway:
 #####            #####
 #####            #####
 
-#####
-#####
-#####
-#####
-##### PENDING
-#####
-#####
-#####
-#####
-#- Traffic split 30 java, 70 go
-#- Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)
-
-# Configure Kiali UI Dashboard
+# Configure Kiali, Prometheus, Grafana, Tracing (Jaeger)
 setup-kiali:
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
 	helm upgrade -i -n kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
+	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml
+	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/grafana.yaml
+	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml
 	# kubectl -n istio-system create token kiali-service-account
 	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
-
-# Configure Prometheus monitoring
-setup-prometheus:
-	# https://istio.io/latest/docs/ops/integrations/prometheus/
-	# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	# helm repo update
-	# helm install prometheus prometheus-community/prometheus -n istio-system
-
-# Configure Grafana dashboards
-setup-grafana:
-	# helm repo add grafana https://grafana.github.io/helm-charts
-	# helm repo update
-	# helm install grafana grafana/grafana -n istio-system
 
 #####      #####
 #####      #####
