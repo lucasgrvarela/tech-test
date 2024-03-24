@@ -34,7 +34,7 @@ Available recipes:
 ```
 
 # Notes
-I usually install every dev tool with `asdf`, it makes my environment pretty easy to replicate and I don't need to think too much on how to install a new tool, if an asdf plugin is not available for the tool I'm installing then I will follow the tool documentation on how to install it. This allow me to easily switch between different version of the tool too.
+I usually install every dev tool with `asdf`, it makes my environment pretty easy to replicate and I don't need to think too much on how to install a new tool, if an asdf plugin is not available for the tool I'm installing then I will follow the tool documentation on how to install it. This allow me to easily switch between different version of the tools too.
 
 I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: [kind](https://github.com/kubernetes-sigs/kind). Later I realized the problems were related with the old machine I was running the setup and their lack of cgroups v2.
 
