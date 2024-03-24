@@ -50,3 +50,5 @@ I had trouble with K3d and could not get it working quickly, I was starting to s
 I could have installed istio with `istioctl` binary but to keep the standard of deploying everything with Helm I configured: `just setup-istio`.
 
 For a production system I believe all the commands could be improved to be more idempotent so I could check if some tool was already installed or not before trying to install, I could install a specific version instead of just relying on latests, check for errors and perform retry if the installation failed for some reason at some point, all that would be nice for a more mature setup.
+
+There are opportunity for improvements on the build/push part because I'm always building the same version v0.0.1. For a production system this could be tagged based on the branch or based on SemVer+Conventional Commits, so a commit with fix: would change only the minor version, if the base version on the registry was v0.0.1, then it would be tagged now as v0.0.2, for a feat: it would change to v0.1.0, for a commit starting with major/BREAKING CHANGE: this would lead to v1.0.0.
