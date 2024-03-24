@@ -3,6 +3,8 @@ kind: Namespace
 metadata:
   name: {{ .Values.namespace }}
   labels: 
-  {{- range $key, $value := .Values.labels }}
+  {{- range $key, $value := .Values.namespaceLabels }}
     {{ $key }}: {{ $value }}
   {{- end }}
+  annotations:
+    "helm.sh/hook": pre-install

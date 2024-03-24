@@ -73,13 +73,19 @@ setup-kiali:
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
 	helm install --set cr.create=true --set cr.namespace=istio-system --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator
+	kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
+	kubectl -n istio-system create token kiali-service-account
 
 # Configure Prometheus monitoring
 setup-prometheus:
-	kubectl create namespace monitoring
-	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	helm repo update
-	helm install prometheus prometheus-community/prometheus -n monitoring
+	# https://istio.io/latest/docs/ops/integrations/prometheus/
+
+
+
+	# kubectl create namespace monitoring
+	# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	# helm repo update
+	# helm install prometheus prometheus-community/prometheus -n monitoring
 
 # Configure Grafana dashboards
 setup-grafana:
@@ -113,11 +119,11 @@ java-push:
 
 # Install the Go app using Helm
 helm-install-go:
-	helm upgrade --install  go-webserver -f go-app/values.yaml helm-app/
+	helm upgrade -n go-webserver --install --create-namespace go-webserver -f go-app/values.yaml helm-app/
 
 # Install the Java app using Helm
 helm-install-java:
-	helm upgrade --install java-webserver -f java-app/values.yaml helm-app/
+	helm upgrade -n java-webserver --install --create-namespace java-webserver -f java-app/values.yaml helm-app/
 
 # Load test the applications
 generate-load:

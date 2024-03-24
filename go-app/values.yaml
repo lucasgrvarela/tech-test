@@ -28,5 +28,5 @@ uris:
   - /ready
   - /metrics
 
-labels:
+namespaceLabels:
   istio-injection: enabled
