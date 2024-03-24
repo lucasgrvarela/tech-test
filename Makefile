@@ -1,12 +1,10 @@
+SHELL := /bin/bash
+
+export PATH := $(HOME)/.asdf/bin:$(PATH)
+
 .PHONY: setup
 setup:
-	# git
-	sudo apt install git -y
-
-	# asdf
+	sudo apt install git curl -y
 	[ -d ~/.asdf ] && echo "asdf exists" || git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.0
 	printf "\nsource ~/.asdf/asdf.sh" >> ~/.bashrc
-	source ~/.bashrc
-
-	# just
 	asdf plugin add just && asdf install just latest && asdf global just latest
