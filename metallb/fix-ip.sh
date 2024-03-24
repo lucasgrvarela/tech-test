@@ -1,5 +1,5 @@
 # Extract IPv4 range from Docker network inspect output
-IP_RANGE=$(docker network inspect -f '{{range .IPAM.Config}}{{if eq .Subnet "172.19.0.0/16"}}{{.Subnet}}{{end}}{{end}}' kind)
+IP_RANGE=$(docker network inspect kind | jq -r '.[0].IPAM.Config[0].Subnet' | cut -d "/" -f 1)
 IP_START=$(echo $IP_RANGE | awk -F '[./]' '{print $1 "." $2 "." 255 "." 200}')
 IP_END=$(echo $IP_RANGE | awk -F '[./]' '{print $1 "." $2 "." 255 "." 250}')
 

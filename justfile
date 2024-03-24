@@ -32,7 +32,7 @@ setup-metallb:
 	helm repo add metallb https://metallb.github.io/metallb
 	helm repo update
 	helm install metallb metallb/metallb -n metallb-system --wait -f metallb/values.yaml
-	bash metallb.sh
+	bash metallb/fix-ip.sh
 	kubectl apply -f metallb/metallb-config.yaml
 
 #####       #####
