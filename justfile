@@ -8,11 +8,11 @@ default:
 
 # Install all the tools you will need to setup the project
 deps:
-	asdf plugin add vegeta https://github.com/grimoh/asdf-vegeta.git && asdf install vegeta latest && asdf global vegeta latest
+	asdf plugin add istio https://github.com/solo-io/asdf-istio && asdf install istio latest && asdf global istio latest
 	asdf plugin add kind https://github.com/reegnz/asdf-kind.git && asdf install kind latest && asdf global kind latest
 	asdf plugin add kubectl && ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.29.2 && asdf global kubectl 1.29.2
 	asdf plugin add helm && asdf install helm latest && asdf global helm latest
-	asdf plugin add jq && asdf install jq latest && asdf global jq latest
+	asdf plugin add hey && asdf install hey latest && asdf global hey latest
 
 #####           #####
 ##### LOCAL K8S #####
@@ -63,8 +63,12 @@ setup-kiali:
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/grafana.yaml
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml
-	# kubectl -n istio-system create token kiali-service-account
-	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
+	
+open-dashboards:
+	istioctl dashboard kiali &
+	istioctl dashboard jaeger &
+	istioctl dashboard prometheus &
+	istioctl dashboard grafana &
 
 #####      #####
 ##### APPS #####
@@ -96,21 +100,41 @@ helm-install-go:
 helm-install-java:
 	helm upgrade -i -n java-webserver --create-namespace java-webserver helm-app/ -f java-app/values.yaml
 
-# Load test the applications
-generate-load:
-	jq -ncM '{method: "GET", url: "http://localhost:8080" }' | vegeta attack -format=json -rate=10 -duration=10s
+# Simple curl to test the apps are up and running
+test-apps:
+	curl -H Host:go-webserver.example.com "http://172.19.255.201:80/health"
+	@sleep 2; echo
+	curl -H Host:go-webserver.example.com "http://172.19.255.201:80/hotels"
+	@sleep 2; echo
+	curl -H Host:java-webserver.example.com "http://172.19.255.201:80/health"
+	@sleep 2; echo
+	curl -H Host:java-webserver.example.com "http://172.19.255.201:80/hotels"
+
+# Load test the individual applications Go and Java
+generate-load-to-specific-service:
+	hey -host go-webserver.example.com -m GET http://172.19.255.201:80/hotels
+	hey -host java-webserver.example.com -m GET http://172.19.255.201:80/hotels
+
+# Configure traffic split between Go and Java apps
+setup-traffic-split:
+	kubectl create namespace trivago-webserver
+	kubectl apply -f traffic-split/
+	curl -H Host:trivago.example.com "http://172.19.255.201:80/health" -I
+
+# Generate load test to common endpoint trivago.example.com with backend Go and Java to test traffic split
+generate-load-traffic-split:
+	hey -host trivago.example.com -m GET http://172.19.255.201:80/hotels
+	hey -host trivago.example.com -m GET http://172.19.255.201:80/ready
+
+PARAM VERSION USER INPUT:
+	x
 
 #####      #####
 ##### MAIN #####
 #####      #####
 
 # Spinup all the infrastructure from local k8s to monitoring
-setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-kiali
+setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-kiali open-dashboards
 
 # Spinup all the applications configurations from build, push to helm install
-setup-all-apps: go-build java-build go-push java-push helm-install-go helm-install-java
-
-setup-test-go-app:
-	curl -H Host:go-webserver.example.com "http://172.19.255.201:80/health"
-	@sleep 2
-	curl -H Host:go-webserver.example.com "http://172.19.255.201:80/hotels"
+setup-all-apps: go-build java-build go-push java-push helm-install-go helm-install-java test-apps generate-load-to-specific-service setup-traffic-split generate-load-traffic-split

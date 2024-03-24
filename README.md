@@ -31,6 +31,12 @@ Available recipes:
     setup-metallb         # Configure metallb to have an loadbalancer on the cluster and expose services to the host machine
 ```
 
+# Result
+After running the apps and starting the `generate-load-traffic-split` this is the expected result to be seen on Kiali
+![traffic-split](images/traffic-split.png)
+![go-app](images/go.png)
+![java-app](images/java.png)
+
 # Additional notes
 I usually install every dev tool with `asdf`, it makes my environment pretty easy to replicate and I don't need to think too much on how to install a new tool, if an asdf plugin is not available for the tool I'm installing then I will follow the tool documentation on how to install it. This allow me to easily switch between different version of the tools too.
 
