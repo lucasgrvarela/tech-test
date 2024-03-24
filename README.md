@@ -1,5 +1,5 @@
 # Prerequisites
-To install the dependencies to install just, run `make`.  
+To install the dependencies to install just, run `make`. If you don't have make, run `sudo apt install make`.
 
 Now with `Just` installed on your system, all the tools you will need to have installed on your local machine are provided in the `justfile` with the `deps` command
 
