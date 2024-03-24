@@ -20,7 +20,7 @@ spec:
     route:
     - destination:
         port:
-          number: {{ .Values.targetPort }}
+          number: {{ .Values.exposedPort }}
         host: {{ .Values.name }}-service
       headers:
         response:
