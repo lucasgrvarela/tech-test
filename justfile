@@ -13,6 +13,7 @@ deps:
 	asdf plugin add kubectl && ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.29.2 && asdf global kubectl 1.29.2
 	asdf plugin add helm && asdf install helm latest && asdf global helm latest
 	asdf plugin add hey && asdf install hey latest && asdf global hey latest
+	asdf plugin add jq && asdf install jq latest && asdf global jq latest
 
 #####           #####
 ##### LOCAL K8S #####
