@@ -55,7 +55,7 @@ setup-istio:
 
 # Install the istio ingress gateway
 setup-ingress-gateway:
-	helm upgrade -i istio-ingressgateway istio/gateway -n istio-ingress --create-namespace --wait -f istio-ingress-gateway/values.yaml
+	helm upgrade -i istio-ingressgateway istio/gateway -n istio-system --create-namespace --wait -f istio-ingress-gateway/values.yaml
 
 #####            #####
 #####            #####
