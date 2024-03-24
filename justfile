@@ -97,11 +97,11 @@ java-push:
 
 # Install the Go app using Helm
 helm-install-go:
-	helm upgrade -i -n go-webserver --create-namespace go-webserver helm-app/ -f go-app/values.yaml
+	helm upgrade -i -n go-webserver --create-namespace go-webserver helm-app/ -f go-app/values.yaml --wait
 
 # Install the Java app using Helm
 helm-install-java:
-	helm upgrade -i -n java-webserver --create-namespace java-webserver helm-app/ -f java-app/values.yaml
+	helm upgrade -i -n java-webserver --create-namespace java-webserver helm-app/ -f java-app/values.yaml --wait
 
 LB_IP := `kubectl get svc -n istio-system istio-ingressgateway -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
 
