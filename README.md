@@ -32,7 +32,6 @@ Available recipes:
     setup-kind            # Create local kubernetes cluster with KinD
     setup-metallb         # Configure metallb to have an loadbalancer on the cluster and expose services to the host machine
     setup-prometheus      # Configure Prometheus monitoring
-    setup-traffic-split   # Configure the traffic split for the applications
 ```
 
 # Notes
