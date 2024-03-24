@@ -109,3 +109,8 @@ setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ing
 
 # Spinup all the applications configurations from build, push to helm install
 setup-all-apps: go-build java-build go-push java-push helm-install-go helm-install-java
+
+setup-test-go-app:
+	curl -H Host:go-webserver.example.com "http://172.19.255.201:80/health"
+	@sleep 2
+	curl -H Host:go-webserver.example.com "http://172.19.255.201:80/hotels"
