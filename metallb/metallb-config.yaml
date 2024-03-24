@@ -5,7 +5,8 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 172.19.255.200-172.19.255.250
+  #- 172.19.255.200-172.19.255.250
+  - $REPLACE_WITH_IP_RANGE
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement

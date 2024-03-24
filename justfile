@@ -10,7 +10,6 @@ default:
 
 # Install all the tools you will need to setup the project
 deps:
-	echo "installing dependencies"
 	asdf plugin add kind https://github.com/reegnz/asdf-kind.git && asdf install kind latest && asdf global kind latest
 	asdf plugin add vegeta https://github.com/grimoh/asdf-vegeta.git && asdf install vegeta latest && asdf global vegeta latest
 	asdf plugin add kubectl && ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.29.2 && asdf global kubectl 1.29.2
@@ -33,13 +32,12 @@ set-context:
 
 # Configure metallb to have an loadbalancer on the cluster and expose services to the host machine
 setup-metallb:
-	# https://kind.sigs.k8s.io/docs/user/loadbalancer/
-	# https://metallb.universe.tf/installation/ -> Followed this doc to install with Helm
 	kubectl create namespace metallb-system
 	helm repo add metallb https://metallb.github.io/metallb
 	helm repo update
-	helm install metallb metallb/metallb -n metallb-system --wait
-	kubectl apply -f metallb/metallb-config.yaml # change address based on the command $ docker network inspect kind | jq .[0].IPAM.Config
+	helm install metallb metallb/metallb -n metallb-system --wait -f metallb/values.yaml
+	bash metallb.sh
+	kubectl apply -f metallb/metallb-config.yaml
 
 #####       #####
 #####       #####
@@ -52,8 +50,8 @@ setup-istio:
 	kubectl create namespace istio-system
 	helm repo add istio https://istio-release.storage.googleapis.com/charts
 	helm repo update
-	helm install istio-base istio/base -n istio-system --set defaultRevision=default # CRDs prereq to control plane istiod
-	helm install istiod istio/istiod -n istio-system --wait
+	helm install istio-base istio/base -n istio-system --set defaultRevision=default -f istio-base/values.yaml # CRDs prereq to control plane istiod
+	helm install istiod istio/istiod -n istio-system --wait -f istiod/values.yaml
 
 # Install the istio ingress gateway
 setup-ingress-gateway:
@@ -72,16 +70,13 @@ setup-kiali:
 	# https://istio.io/latest/docs/ops/integrations/kiali/
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
-	helm install --set cr.create=true --set cr.namespace=istio-system --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator
-	kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
-	kubectl -n istio-system create token kiali-service-account
+	helm install --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
+	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
+	# kubectl -n istio-system create token kiali-service-account
 
 # Configure Prometheus monitoring
 setup-prometheus:
 	# https://istio.io/latest/docs/ops/integrations/prometheus/
-
-
-
 	# kubectl create namespace monitoring
 	# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	# helm repo update
@@ -89,9 +84,9 @@ setup-prometheus:
 
 # Configure Grafana dashboards
 setup-grafana:
-	helm repo add grafana https://grafana.github.io/helm-charts
-	helm repo update
-	helm install grafana grafana/grafana --namespace monitoring
+	#helm repo add grafana https://grafana.github.io/helm-charts
+	#helm repo update
+	#helm install grafana grafana/grafana --namespace monitoring
 
 #####      #####
 #####      #####
