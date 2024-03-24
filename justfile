@@ -126,9 +126,6 @@ generate-load-traffic-split:
 	hey -host trivago.example.com -m GET http://172.19.255.201:80/hotels
 	hey -host trivago.example.com -m GET http://172.19.255.201:80/ready
 
-PARAM VERSION USER INPUT:
-	x
-
 #####      #####
 ##### MAIN #####
 #####      #####
