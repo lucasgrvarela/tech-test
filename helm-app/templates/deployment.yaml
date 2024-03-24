@@ -4,9 +4,10 @@ kind: Deployment
 metadata:
   name: {{ .Values.name }}-deployment
   namespace: {{ .Values.namespace }}
-  prometheus.io/scrape: "true"
-  prometheus.io/path: "/metrics"
-  prometheus.io/port: "8080"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8080"
 spec:
   replicas: {{ .Values.replicas }}
   selector:
