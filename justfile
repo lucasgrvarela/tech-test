@@ -73,14 +73,14 @@ setup-ingress-gateway:
 #####
 #####
 #####
-- Traffic split 30 java, 70 go
-- Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)
+#- Traffic split 30 java, 70 go
+#- Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)
 
 # Configure Kiali UI Dashboard
 setup-kiali:
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
-	helm upgrade --install --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
+	helm upgrade -i -n kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
 	# kubectl -n istio-system create token kiali-service-account
 	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
 
@@ -123,11 +123,11 @@ java-push:
 
 # Install the Go app using Helm
 helm-install-go:
-	helm upgrade --install -namespace go-webserver --create-namespace go-webserver -f go-app/values.yaml helm-app/
+	helm upgrade -i -n go-webserver --create-namespace go-webserver helm-app/ -f go-app/values.yaml
 
 # Install the Java app using Helm
 helm-install-java:
-	helm upgrade --install -namespace java-webserver --create-namespace java-webserver -f java-app/values.yaml helm-app/
+	helm upgrade -i -n java-webserver --create-namespace java-webserver helm-app/ -f java-app/values.yaml
 
 # Load test the applications
 generate-load:

@@ -21,7 +21,7 @@ spec:
     - destination:
         port:
           number: {{ .Values.targetPort }}
-        host: {{ .Values.name }}
+        host: {{ .Values.name }}-service
       headers:
         response:
           add:
