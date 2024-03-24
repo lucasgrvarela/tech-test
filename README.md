@@ -24,13 +24,11 @@ Available recipes:
     set-context           # Set the current kubernetes context to the kind cluster
     setup-all-apps        # Spinup all the applications configurations from build, push to helm install
     setup-all-infra       # Spinup all the infrastructure from local k8s to monitoring
-    setup-grafana         # Configure Grafana dashboards
     setup-ingress-gateway # Install the istio ingress gateway
     setup-istio           # Install istio CRDs and istiod -- control plane
-    setup-kiali           # Configure Kiali UI Dashboard
+    setup-kiali           # Configure Kiali, Prometheus, Grafana, Tracing (Jaeger)
     setup-kind            # Create local kubernetes cluster with KinD
     setup-metallb         # Configure metallb to have an loadbalancer on the cluster and expose services to the host machine
-    setup-prometheus      # Configure Prometheus monitoring
 ```
 
 # Additional notes

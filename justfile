@@ -117,7 +117,7 @@ generate-load:
 #####      #####
 
 # Spinup all the infrastructure from local k8s to monitoring
-setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-kiali setup-prometheus setup-grafana
+setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ingress-gateway setup-kiali
 
 # Spinup all the applications configurations from build, push to helm install
 setup-all-apps: go-build java-build go-push java-push helm-install-go helm-install-java
