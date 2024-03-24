@@ -3,9 +3,7 @@ default:
   @just --list
 
 #####       #####
-#####       #####
 ##### TOOLS #####
-#####       #####
 #####       #####
 
 # Install all the tools you will need to setup the project
@@ -17,9 +15,7 @@ deps:
 	asdf plugin add jq && asdf install jq latest && asdf global jq latest
 
 #####           #####
-#####           #####
 ##### LOCAL K8S #####
-#####           #####
 #####           #####
 
 # Create local kubernetes cluster with KinD
@@ -40,9 +36,7 @@ setup-metallb:
 	kubectl apply -f metallb/metallb-config.yaml
 
 #####       #####
-#####       #####
 ##### ISTIO #####
-#####       #####
 #####       #####
 
 # Install istio CRDs and istiod -- control plane
@@ -58,9 +52,7 @@ setup-ingress-gateway:
 	helm upgrade -i istio-ingressgateway istio/gateway -n istio-system --create-namespace --wait -f istio-ingress-gateway/values.yaml
 
 #####            #####
-#####            #####
 ##### MONITORING #####
-#####            #####
 #####            #####
 
 # Configure Kiali, Prometheus, Grafana, Tracing (Jaeger)
@@ -75,9 +67,7 @@ setup-kiali:
 	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
 
 #####      #####
-#####      #####
 ##### APPS #####
-#####      #####
 #####      #####
 
 # Build the Go app
@@ -111,9 +101,7 @@ generate-load:
 	jq -ncM '{method: "GET", url: "http://localhost:8080" }' | vegeta attack -format=json -rate=10 -duration=10s
 
 #####      #####
-#####      #####
 ##### MAIN #####
-#####      #####
 #####      #####
 
 # Spinup all the infrastructure from local k8s to monitoring
