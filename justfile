@@ -66,27 +66,24 @@ setup-ingress-gateway:
 
 # Configure Kiali UI Dashboard
 setup-kiali:
-	# https://kiali.io/docs/installation/installation-guide/install-with-helm/
-	# https://istio.io/latest/docs/ops/integrations/kiali/
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
-	helm install --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
-	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
+	helm upgrade --install --namespace kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
 	# kubectl -n istio-system create token kiali-service-account
+	# kubectl -n istio-system port-forward svc/kiali 20001:20001 # http://localhost:20001/kiali/
 
 # Configure Prometheus monitoring
 setup-prometheus:
 	# https://istio.io/latest/docs/ops/integrations/prometheus/
-	# kubectl create namespace monitoring
 	# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	# helm repo update
-	# helm install prometheus prometheus-community/prometheus -n monitoring
+	# helm install prometheus prometheus-community/prometheus -n istio-system
 
 # Configure Grafana dashboards
 setup-grafana:
-	#helm repo add grafana https://grafana.github.io/helm-charts
-	#helm repo update
-	#helm install grafana grafana/grafana --namespace monitoring
+	# helm repo add grafana https://grafana.github.io/helm-charts
+	# helm repo update
+	# helm install grafana grafana/grafana -n istio-system
 
 #####      #####
 #####      #####
@@ -114,11 +111,11 @@ java-push:
 
 # Install the Go app using Helm
 helm-install-go:
-	helm upgrade -n go-webserver --install --create-namespace go-webserver -f go-app/values.yaml helm-app/
+	helm upgrade --install -namespace go-webserver --create-namespace go-webserver -f go-app/values.yaml helm-app/
 
 # Install the Java app using Helm
 helm-install-java:
-	helm upgrade -n java-webserver --install --create-namespace java-webserver -f java-app/values.yaml helm-app/
+	helm upgrade --install -namespace java-webserver --create-namespace java-webserver -f java-app/values.yaml helm-app/
 
 # Load test the applications
 generate-load:
