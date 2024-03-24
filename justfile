@@ -64,6 +64,18 @@ setup-ingress-gateway:
 #####            #####
 #####            #####
 
+#####
+#####
+#####
+#####
+##### PENDING
+#####
+#####
+#####
+#####
+- Traffic split 30 java, 70 go
+- Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)
+
 # Configure Kiali UI Dashboard
 setup-kiali:
 	helm repo add kiali https://kiali.org/helm-charts

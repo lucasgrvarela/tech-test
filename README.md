@@ -33,7 +33,7 @@ Available recipes:
     setup-prometheus      # Configure Prometheus monitoring
 ```
 
-# Notes
+# Additional notes
 I usually install every dev tool with `asdf`, it makes my environment pretty easy to replicate and I don't need to think too much on how to install a new tool, if an asdf plugin is not available for the tool I'm installing then I will follow the tool documentation on how to install it. This allow me to easily switch between different version of the tools too.
 
 I had trouble with K3d and could not get it working quickly, I was starting to spend to much time troubleshooting here so I decided to use another tool I already knew: [kind](https://github.com/kubernetes-sigs/kind). Later I realized the problems were related with the old machine I was running the setup and their lack of cgroups v2.
@@ -41,7 +41,3 @@ I had trouble with K3d and could not get it working quickly, I was starting to s
 I could have installed istio with `istioctl` binary but to keep the standard of deploying everything with Helm I configured: `just setup-istio`.
 
 For a production system I believe all the commands could be improved to be more idempotent so I could check if some tool was already installed or not before trying to install, I could install a specific version instead of just relying on latests, check for errors and perform retry if the installation failed for some reason at some point, all that would be nice for a more mature setup.
-
-# PENDING:
-- Traffic split 30 java, 70 go
-- Try to show other metrics, like CPU usage, memory utilization, and latency as well to compare the two services (Kiali, Prometheus, Grafana, EFK)
