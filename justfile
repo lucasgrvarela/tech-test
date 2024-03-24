@@ -1,6 +1,6 @@
 # Helper/List all the available commands and their description
 default:
-  just --list
+  @just --list
 
 #####       #####
 #####       #####

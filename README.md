@@ -11,7 +11,6 @@ Run `just setup-all-apps`
 # Just documentation
 ```
 $ just
-just --list
 Available recipes:
     default               # Helper/List all the available commands and their description
     deps                  # Install all the tools you will need to setup the project
