@@ -12,23 +12,27 @@ Run `just setup-all-apps`
 ```
 $ just
 Available recipes:
-    default               # Helper/List all the available commands and their description
-    deps                  # Install all the tools you will need to setup the project
-    generate-load         # Load test the applications
-    go-build              # Build the Go app
-    go-push               # Docker tag and push the Go app to the local registry
-    helm-install-go       # Install the Go app using Helm
-    helm-install-java     # Install the Java app using Helm
-    java-build            # Build the Java app
-    java-push             # Docker tag and push the Java app to the local registry
-    set-context           # Set the current kubernetes context to the kind cluster
-    setup-all-apps        # Spinup all the applications configurations from build, push to helm install
-    setup-all-infra       # Spinup all the infrastructure from local k8s to monitoring
-    setup-ingress-gateway # Install the istio ingress gateway
-    setup-istio           # Install istio CRDs and istiod -- control plane
-    setup-kiali           # Configure Kiali, Prometheus, Grafana, Tracing (Jaeger)
-    setup-kind            # Create local kubernetes cluster with KinD
-    setup-metallb         # Configure metallb to have an loadbalancer on the cluster and expose services to the host machine
+    default                     # Helper/List all the available commands and their description
+    deps                        # Install all the tools you will need to setup the project
+    generate-load-to-specific-service # Load test the individual applications Go and Java
+    generate-load-traffic-split # Generate load test to common endpoint trivago.example.com with backend Go and Java to test traffic split
+    go-build                    # Build the Go app
+    go-push                     # Docker tag and push the Go app to the local registry
+    helm-install-go             # Install the Go app using Helm
+    helm-install-java           # Install the Java app using Helm
+    java-build                  # Build the Java app
+    java-push                   # Docker tag and push the Java app to the local registry
+    open-dashboards             # Open all dashs like kiali, jaeger, prometheus and grafana
+    set-context                 # Set the current kubernetes context to the kind cluster
+    setup-all-apps              # Spinup all the applications configurations from build, push to helm install
+    setup-all-infra             # Spinup all the infrastructure from local k8s to monitoring
+    setup-ingress-gateway       # Install the istio ingress gateway
+    setup-istio                 # Install istio CRDs and istiod -- control plane
+    setup-kiali                 # Configure Kiali, Prometheus, Grafana, Tracing (Jaeger)
+    setup-kind                  # Create local kubernetes cluster with KinD
+    setup-metallb               # Configure metallb to have an loadbalancer on the cluster and expose services to the host machine
+    setup-traffic-split         # Configure traffic split between Go and Java apps
+    test-apps                   # Simple curl to test the apps are up and running
 ```
 
 # Result
