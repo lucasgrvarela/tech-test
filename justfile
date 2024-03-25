@@ -159,3 +159,4 @@ setup-delete-all:
 	kind delete cluster
 	docker stop kind-registry
 	docker rm kind-registry
+	git checkout metallb/metallb-config.yaml
