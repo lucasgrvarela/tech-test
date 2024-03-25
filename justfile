@@ -19,7 +19,7 @@ deps:
 ##### LOCAL K8S #####
 #####           #####
 
-# Create local kubernetes cluster with KinD
+# Create local kubernetes cluster with kind
 setup-kind:
 	bash kind/kind-with-registry.sh # https://kind.sigs.k8s.io/docs/user/local-registry/
 
@@ -60,15 +60,15 @@ setup-ingress-gateway:
 setup-kiali:
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
-	helm upgrade -i -n kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
+	helm upgrade -i -n kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml --wait
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml --wait=true
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/grafana.yaml --wait=true
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml --wait=true
 
 # Open all dashs like kiali (token will be printed on terminal), jaeger, prometheus and grafana
 open-dashboards:
-	istioctl dashboard kiali &
 	kubectl -n istio-system create token kiali-service-account
+	istioctl dashboard kiali &
 	istioctl dashboard jaeger &
 	istioctl dashboard prometheus &
 	istioctl dashboard grafana &
@@ -149,3 +149,13 @@ setup-all-infra: deps setup-kind set-context setup-metallb setup-istio setup-ing
 
 # Spinup all the applications configurations from build, push to helm install
 setup-all-apps: go-build java-build go-push java-push helm-install-go helm-install-java test-apps generate-load-to-specific-service setup-traffic-split generate-load-traffic-split
+
+#####         #####
+##### CLEANUP #####
+#####         #####
+
+# Cleanup the installation
+setup-delete-all:
+	kind delete cluster
+	docker stop kind-registry
+	docker rm kind-registry

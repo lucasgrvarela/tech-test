@@ -27,6 +27,7 @@ Available recipes:
     set-context                 # Set the current kubernetes context to the kind cluster
     setup-all-apps              # Spinup all the applications configurations from build, push to helm install
     setup-all-infra             # Spinup all the infrastructure from local k8s to monitoring
+    setup-delete-all            # Cleanup the installation
     setup-ingress-gateway       # Install the istio ingress gateway
     setup-istio                 # Install istio CRDs and istiod -- control plane
     setup-kiali                 # Configure Kiali, Prometheus, Grafana, Tracing (Jaeger)
