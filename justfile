@@ -34,7 +34,7 @@ setup-metallb:
 	helm repo update
 	helm install metallb metallb/metallb -n metallb-system --wait -f metallb/values.yaml
 	bash metallb/fix-ip.sh
-	kubectl apply -f metallb/metallb-config.yaml
+	kubectl apply -f metallb/metallb-config.yaml --wait=true
 
 #####       #####
 ##### ISTIO #####
@@ -61,14 +61,14 @@ setup-kiali:
 	helm repo add kiali https://kiali.org/helm-charts
 	helm repo update
 	helm upgrade -i -n kiali-operator --create-namespace kiali-operator kiali/kiali-operator -f kiali/values.yaml
-	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml
-	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/grafana.yaml
-	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml
+	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml --wait=true
+	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/grafana.yaml --wait=true
+	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml --wait=true
 
 # Open all dashs like kiali (token will be printed on terminal), jaeger, prometheus and grafana
 open-dashboards:
-	kubectl -n istio-system create token kiali-service-account
 	istioctl dashboard kiali &
+	kubectl -n istio-system create token kiali-service-account
 	istioctl dashboard jaeger &
 	istioctl dashboard prometheus &
 	istioctl dashboard grafana &
@@ -103,7 +103,7 @@ helm-install-go:
 helm-install-java:
 	helm upgrade -i -n java-webserver --create-namespace java-webserver helm-app/ -f java-app/values.yaml --wait
 
-LB_IP := `kubectl get svc -n istio-system istio-ingressgateway -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
+LB_IP := `kubectl get svc -n istio-systemx istio-ingressgateway -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
 
 # Simple curl to test the apps are up and running
 test-apps:
@@ -123,7 +123,8 @@ generate-load-to-specific-service:
 # Configure traffic split between Go and Java apps
 setup-traffic-split:
 	kubectl create namespace trivago-webserver
-	kubectl apply -f traffic-split/
+	kubectl apply -f traffic-split/ --wait=true
+	@sleep 3
 	curl -H Host:trivago.example.com "http://{{LB_IP}}:80/health" -I
 
 # Generate load test to common endpoint trivago.example.com with backend Go and Java to test traffic split
