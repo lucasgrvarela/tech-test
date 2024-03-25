@@ -103,34 +103,42 @@ helm-install-go:
 helm-install-java:
 	helm upgrade -i -n java-webserver --create-namespace java-webserver helm-app/ -f java-app/values.yaml --wait
 
-LB_IP := `kubectl get svc -n istio-systemx istio-ingressgateway -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
-
 # Simple curl to test the apps are up and running
 test-apps:
-	curl -H Host:go-webserver.example.com "http://{{LB_IP}}:80/health"
-	@sleep 2; echo
-	curl -H Host:go-webserver.example.com "http://{{LB_IP}}:80/hotels"
-	@sleep 2; echo
-	curl -H Host:java-webserver.example.com "http://{{LB_IP}}:80/health"
-	@sleep 2; echo
-	curl -H Host:java-webserver.example.com "http://{{LB_IP}}:80/hotels"
+	@sh -ec '\
+	LB_IP=$(kubectl get svc -n istio-system istio-ingressgateway -ojsonpath="{.status.loadBalancer.ingress[0].ip}"); \
+	curl -H Host:go-webserver.example.com "http://${LB_IP}:80/health"; \
+	sleep 2; echo; \
+	curl -H Host:go-webserver.example.com "http://${LB_IP}:80/hotels"; \
+	sleep 2; echo; \
+	curl -H Host:java-webserver.example.com "http://${LB_IP}:80/health"; \
+	sleep 2; echo; \
+	curl -H Host:java-webserver.example.com "http://${LB_IP}:80/hotels"; \
+	'
 
 # Load test the individual applications Go and Java
 generate-load-to-specific-service:
-	hey -host go-webserver.example.com -m GET http://{{LB_IP}}:80/hotels
-	hey -host java-webserver.example.com -m GET http://{{LB_IP}}:80/hotels
+	@sh -ec '\
+	LB_IP=$(kubectl get svc -n istio-system istio-ingressgateway -ojsonpath="{.status.loadBalancer.ingress[0].ip}"); \
+	hey -host go-webserver.example.com -m GET http://${LB_IP}:80/hotels; \
+	hey -host java-webserver.example.com -m GET http://${LB_IP}:80/hotels; \
+	'
 
 # Configure traffic split between Go and Java apps
 setup-traffic-split:
-	kubectl create namespace trivago-webserver
+	kubectl create namespace trivago-webserver || true
 	kubectl apply -f traffic-split/ --wait=true
 	@sleep 3
-	curl -H Host:trivago.example.com "http://{{LB_IP}}:80/health" -I
+	@sh -ec '\
+	LB_IP=$(kubectl get svc -n istio-system istio-ingressgateway -ojsonpath="{.status.loadBalancer.ingress[0].ip}"); \
+	curl -H Host:trivago.example.com "http://${LB_IP}:80/health" -I'
 
 # Generate load test to common endpoint trivago.example.com with backend Go and Java to test traffic split
 generate-load-traffic-split:
-	hey -host trivago.example.com -m GET http://{{LB_IP}}:80/hotels
-	hey -host trivago.example.com -m GET http://{{LB_IP}}:80/ready
+	@sh -ec '\
+	LB_IP=$(kubectl get svc -n istio-system istio-ingressgateway -ojsonpath="{.status.loadBalancer.ingress[0].ip}"); \
+	hey -host trivago.example.com -m GET http://${LB_IP}:80/hotels; \
+	hey -host trivago.example.com -m GET http://${LB_IP}:80/ready'
 
 #####      #####
 ##### MAIN #####
