@@ -67,6 +67,7 @@ setup-kiali:
 
 # Open all dashs like kiali (token will be printed on terminal), jaeger, prometheus and grafana
 open-dashboards:
+	@sleep 30
 	kubectl -n istio-system create token kiali-service-account
 	istioctl dashboard kiali &
 	istioctl dashboard jaeger &
