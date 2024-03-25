@@ -66,13 +66,21 @@ setup-kiali:
 	kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/jaeger.yaml --wait=true
 
 # Open all dashs like kiali (token will be printed on terminal), jaeger, prometheus and grafana
-open-dashboards:
-	@sleep 30
+open-dashboards: wait-for-kiali
 	kubectl -n istio-system create token kiali-service-account
 	istioctl dashboard kiali &
 	istioctl dashboard jaeger &
 	istioctl dashboard prometheus &
 	istioctl dashboard grafana &
+
+wait-for-kiali:
+	@bash -ec '\
+	POD_NAME=$(kubectl -n istio-system get po | grep kiali | awk "{print \$1}"); \
+	while [[ "$(kubectl get pod ${POD_NAME} -n istio-system -o jsonpath='{.status.phase}')" != "Running" ]]; do \
+		echo "Pod is not yet running, waiting..."; \
+		sleep 5; \
+	done; \
+	echo "Pod is now running."'
 
 #####      #####
 ##### APPS #####
