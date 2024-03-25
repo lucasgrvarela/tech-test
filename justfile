@@ -74,13 +74,7 @@ open-dashboards: wait-for-kiali
 	istioctl dashboard grafana &
 
 wait-for-kiali:
-	@bash -ec '\
-	POD_NAME=$(kubectl -n istio-system get po | grep kiali | awk "{print \$1}"); \
-	while [[ "$(kubectl get pod ${POD_NAME} -n istio-system -o jsonpath='{.status.phase}')" != "Running" ]]; do \
-		echo "Pod is not yet running, waiting..."; \
-		sleep 5; \
-	done; \
-	echo "Pod is now running."'
+	sleep 60
 
 #####      #####
 ##### APPS #####
